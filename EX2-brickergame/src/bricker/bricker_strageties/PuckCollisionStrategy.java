@@ -20,15 +20,7 @@ public class PuckCollisionStrategy extends CollisionStrategy {
     }
     @Override
     public boolean onCollision(GameObject object1, GameObject object2) {
-        Renderable puckImage = brickerGameManager.readImage(PUCK_IMAGE_PATH,true);
-        Sound puckSound = brickerGameManager.readSound(BALL_SOUND_PATH);
-        makePuckBall(object1,puckImage,puckSound);
-        makePuckBall(object1, puckImage,puckSound);
+        brickerGameManager.addPuckBalls(object1);
         return super.onCollision(object1, object2);
-    }
-
-    private void makePuckBall(GameObject object1, Renderable puckImage, Sound puckSound) {
-        Puck puck = new Puck(object1.getTopLeftCorner(),new Vector2(PUCK_RADIUS,PUCK_RADIUS),puckImage,puckSound,brickerGameManager);
-        brickerGameManager.addObject(puck, Layer.DEFAULT);
     }
 }

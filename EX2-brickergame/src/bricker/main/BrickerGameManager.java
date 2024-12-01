@@ -1,8 +1,8 @@
 package bricker.main;
 
-import bricker.bricker_strageties.BasicCollisionStrategy;
 import bricker.bricker_strageties.ExtraPaddleCollisionStrategy;
 import bricker.bricker_strageties.PuckCollisionStrategy;
+import bricker.bricker_strageties.TurboModeCollisionStrategy;
 import bricker.gameobjects.*;
 import danogl.GameManager;
 import danogl.GameObject;
@@ -14,7 +14,6 @@ import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
 import danogl.util.Counter;
 
-import java.awt.*;
 import java.util.Random;
 import java.awt.event.KeyEvent;
 
@@ -28,7 +27,7 @@ public class BrickerGameManager extends GameManager {
     private int livesRemaining = DEFAULT_LIVES;
     private Counter bricksCounter = new Counter();
 
-    private GameObject ball;
+    private Ball ball;
 
     private Vector2 windowDimensions;
     private WindowController windowController;
@@ -40,6 +39,8 @@ public class BrickerGameManager extends GameManager {
     private UserInputListener inputListener;
     private SoundReader soundReader;
     private int numPaddles;
+    private boolean ballTurboMode;
+    private int ballCollisionCounter;
 
 
     public BrickerGameManager(String windowTitle, Vector2 windowDimensions, int numRows, int numBricksInRow) {
@@ -47,6 +48,8 @@ public class BrickerGameManager extends GameManager {
         this.numRows = numRows;
         this.numBricksInRow = numBricksInRow;
         this.numPaddles = 0;
+        this.ballTurboMode = false;
+        this.ballCollisionCounter = 0;
     }
 
     @Override
@@ -120,7 +123,7 @@ public class BrickerGameManager extends GameManager {
                 float x = WALL_THICKNESS + col * brickWidth;
                 float y = BRICK_START_Y + row * BRICK_HEIGHT;
                 Brick brick = new Brick(new Vector2(x, y), new Vector2(brickWidth - 2, BRICK_HEIGHT),
-                        brickImage, new ExtraPaddleCollisionStrategy(this),this.bricksCounter);
+                        brickImage, new PuckCollisionStrategy(this),this.bricksCounter);
                 gameObjects().addGameObject(brick, Layer.STATIC_OBJECTS);
             }
         }
@@ -146,7 +149,11 @@ public class BrickerGameManager extends GameManager {
     public void update(float deltaTime) {
         super.update(deltaTime);
         checkForGameEnd();
+        if(ballTurboMode && ball.getCollisionCounter() == ballCollisionCounter + HITS_RED_BALL){
+            disableTurboMode();
+        }
     }
+
 
     private void checkForGameEnd(){
         float ballHeight = ball.getCenter().y();
@@ -179,6 +186,8 @@ public class BrickerGameManager extends GameManager {
 
     private void resetGame(){
         numPaddles = 0;
+        ballTurboMode = false;
+        ballCollisionCounter = 0;
         livesRemaining = DEFAULT_LIVES;
         bricksCounter = new Counter();
         windowController.resetGame();
@@ -225,12 +234,34 @@ public class BrickerGameManager extends GameManager {
         gameObjects().addGameObject(object, layer);
     }
 
-    public Renderable readImage(String imagePath, boolean isTopPixelTransparency) {
-        return imageReader.readImage(imagePath, isTopPixelTransparency);
+    public void addPuckBalls(GameObject brick) {
+        Renderable puckImage = imageReader.readImage(PUCK_IMAGE_PATH,true);
+        Sound puckSound = soundReader.readSound(BALL_SOUND_PATH);
+        for (int i = 0; i < NUM_PUCKS_CREATE_COLLISION; i++) {
+            Puck puck = new Puck(brick.getTopLeftCorner(),new Vector2(PUCK_RADIUS,PUCK_RADIUS),puckImage,puckSound,this);
+            addObject(puck, Layer.DEFAULT);
+        }
     }
 
-    public Sound readSound(String soundPath) {
-        return soundReader.readSound(soundPath);
+    public void turboMode(GameObject object) {
+        if(object == ball && ballTurboMode == false){
+            ballTurboMode = true;
+            Vector2 currentVelocity = ball.getVelocity();
+            Vector2 newVelocity = currentVelocity.mult(TURBE_MODE_SPEED_MULT);
+            ball.setVelocity(newVelocity);
+            Renderable redBallImage = imageReader.readImage(RED_BALL_IMAGE_PATH, true);
+            ball.renderer().setRenderable(redBallImage);
+            ballCollisionCounter = ball.getCollisionCounter();
+        }
+    }
+
+    private void disableTurboMode() {
+        ballTurboMode = false;
+        Vector2 currentVelocity = ball.getVelocity();
+        Vector2 newVelocity = currentVelocity.mult(1/TURBE_MODE_SPEED_MULT);
+        ball.setVelocity(newVelocity);
+        Renderable ballImage = imageReader.readImage(BALL_IMAGE_PATH, true);
+        ball.renderer().setRenderable(ballImage);
     }
 
     public static void main(String[] args) {
@@ -248,5 +279,6 @@ public class BrickerGameManager extends GameManager {
                 numBricksInRow);
         game.run();
     }
+
 
 }
