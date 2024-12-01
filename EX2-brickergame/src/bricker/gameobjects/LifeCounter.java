@@ -6,12 +6,20 @@ import danogl.collisions.Layer;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
 
+
 public abstract class LifeCounter extends GameObject {
     protected int maxLives;
     protected BrickerGameManager brickerGameManager;
     protected Vector2 initialPosition;
     protected int currentLives;
 
+    /**
+     * Constructs a new instance of LifeCounter.
+     * @param brickerGameManager
+     * @param position
+     * @param maxLives
+     * @param currentLives
+     */
     public LifeCounter(BrickerGameManager brickerGameManager, Vector2 position, int maxLives,int currentLives) {
         super(position, Vector2.ZERO, null);
         this.brickerGameManager = brickerGameManager;

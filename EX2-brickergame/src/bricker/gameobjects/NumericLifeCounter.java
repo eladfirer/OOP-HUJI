@@ -12,15 +12,12 @@ public class NumericLifeCounter extends LifeCounter {
 
     private Vector2 counterSize;
     private GameObject textObject;
+    private TextRenderable textRenderable;
 
     public NumericLifeCounter(BrickerGameManager brickerGameManager, Vector2 position, int maxLives, int currentLives,Vector2 counterSize) {
         super(brickerGameManager, position, maxLives, currentLives);
         this.counterSize = counterSize;
-        createTextObject();
-    }
-
-    private void createTextObject() {
-        TextRenderable textRenderable = new TextRenderable(String.valueOf(currentLives));
+        this.textRenderable = new TextRenderable(String.valueOf(currentLives));
         updateColor(textRenderable);
         this.textObject = new GameObject(initialPosition, counterSize, textRenderable);
         this.brickerGameManager.addObject(textObject, Layer.UI);
@@ -29,15 +26,17 @@ public class NumericLifeCounter extends LifeCounter {
     @Override
     public void addLive() {
         currentLives += 1;
-        brickerGameManager.destroyObject(textObject, Layer.UI);
-        createTextObject();
+        textRenderable.setString(String.valueOf(currentLives));
+        updateColor(textRenderable);
+        textObject.renderer().setRenderable(textRenderable);
     }
 
     @Override
     public void removeLive() {
         currentLives -= 1;
-        brickerGameManager.destroyObject(textObject, Layer.UI);
-        createTextObject();
+        textRenderable.setString(String.valueOf(currentLives));
+        updateColor(textRenderable);
+        textObject.renderer().setRenderable(textRenderable);
     }
 
     private void updateColor(TextRenderable textRenderable) {
@@ -49,6 +48,4 @@ public class NumericLifeCounter extends LifeCounter {
             textRenderable.setColor(Color.RED);
         }
     }
-
-
 }
