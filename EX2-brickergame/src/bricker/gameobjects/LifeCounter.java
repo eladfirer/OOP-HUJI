@@ -6,7 +6,9 @@ import danogl.collisions.Layer;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
 
-
+/**
+ * LifeCounter - represent a counter in game
+ */
 public class LifeCounter extends GameObject {
     protected int maxLives;
     protected BrickerGameManager brickerGameManager;
@@ -16,12 +18,14 @@ public class LifeCounter extends GameObject {
 
     /**
      * Constructs a new instance of LifeCounter.
-     * @param brickerGameManager
-     * @param position
-     * @param maxLives
-     * @param currentLives
+     *
+     * @param brickerGameManager - game manager
+     * @param position           - position for constructor
+     * @param maxLives           - max lives counter
+     * @param currentLives       - current lives
      */
-    public LifeCounter(BrickerGameManager brickerGameManager, Vector2 position, int maxLives,int currentLives) {
+    public LifeCounter(BrickerGameManager brickerGameManager, Vector2 position, int maxLives,
+                       int currentLives) {
         super(position, Vector2.ZERO, null);
         this.brickerGameManager = brickerGameManager;
         this.currentLives = currentLives;
@@ -30,18 +34,30 @@ public class LifeCounter extends GameObject {
         this.exceededMaxLives = false;
     }
 
-    public void removeLive(){
+    /**
+     * remove live from counter
+     */
+    public void removeLive() {
         currentLives--;
-    };
-    public void addLive(){
-        if(currentLives < maxLives){
+    }
+
+    ;
+
+    /**
+     * add live from counter
+     */
+    public void addLive() {
+        if (currentLives < maxLives) {
             currentLives++;
             exceededMaxLives = false;
         }
-        else{
+        else {
             exceededMaxLives = true;
         }
-    };
+    }
+
+    ;
+
 
     public int getCurrentLives() {
         return currentLives;

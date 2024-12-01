@@ -7,19 +7,43 @@ import danogl.gui.rendering.Renderable;
 import danogl.util.Counter;
 import danogl.util.Vector2;
 
+/**
+ * Brick - represents a brick in the game
+ */
 public class Brick extends GameObject {
+    private boolean collided;
     CollisionStrategy collisionStrategy;
-    private  Counter bricksDown;
+    private Counter bricksDown;
 
-    public Brick(Vector2 topLeftCorner, Vector2 dimensions, Renderable renderable, CollisionStrategy collisionStrategy, Counter bricksDown) {
+    /**
+     * Constructs a new instance of Brick.
+     *
+     * @param topLeftCorner     - placement for brick
+     * @param dimensions        - brick dimensions
+     * @param renderable        - brick image
+     * @param collisionStrategy - brick collision strategy
+     * @param bricksDown        - counter for bricks down
+     */
+    public Brick(Vector2 topLeftCorner, Vector2 dimensions, Renderable renderable,
+                 CollisionStrategy collisionStrategy, Counter bricksDown) {
         super(topLeftCorner, dimensions, renderable);
         this.collisionStrategy = collisionStrategy;
         this.bricksDown = bricksDown;
+        this.collided = false;
     }
+
+    /**
+     * responsible for handling wall collision behaviour
+     *
+     * @param other     - object that collided with brick
+     * @param collision - type of collision
+     */
     public void onCollisionEnter(GameObject other, Collision collision) {
-        super.onCollisionEnter(other, collision);
-        if(collisionStrategy.onCollision(this,other)){
+        if (collided == false) {
+            super.onCollisionEnter(other, collision);
+            collisionStrategy.onCollision(this, other);
             bricksDown.increment();
+            collided = true;
         }
     }
 }
