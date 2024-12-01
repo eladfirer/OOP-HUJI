@@ -7,11 +7,12 @@ import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
 
 
-public abstract class LifeCounter extends GameObject {
+public class LifeCounter extends GameObject {
     protected int maxLives;
     protected BrickerGameManager brickerGameManager;
     protected Vector2 initialPosition;
     protected int currentLives;
+    protected boolean exceededMaxLives;
 
     /**
      * Constructs a new instance of LifeCounter.
@@ -26,9 +27,24 @@ public abstract class LifeCounter extends GameObject {
         this.currentLives = currentLives;
         this.maxLives = maxLives;
         this.initialPosition = position;
+        this.exceededMaxLives = false;
     }
 
-    public void removeLive(){};
-    public void addLive(){};
+    public void removeLive(){
+        currentLives--;
+    };
+    public void addLive(){
+        if(currentLives < maxLives){
+            currentLives++;
+            exceededMaxLives = false;
+        }
+        else{
+            exceededMaxLives = true;
+        }
+    };
+
+    public int getCurrentLives() {
+        return currentLives;
+    }
 }
 

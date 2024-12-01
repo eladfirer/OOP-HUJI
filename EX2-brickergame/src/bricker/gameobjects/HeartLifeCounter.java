@@ -26,21 +26,23 @@ public class HeartLifeCounter extends LifeCounter {
     }
     @Override
     public void removeLive(){
-        brickerGameManager.destroyObject(heartObjects[currentLives-1], Layer.UI);
-        currentLives--;
+        super.removeLive();
+        brickerGameManager.destroyObject(heartObjects[currentLives], Layer.UI);
     }
 
     @Override
     public void addLive(){
+        super.addLive();
         createHeart(currentLives - 1);
-        currentLives++;
     }
 
     private void createHeart(int heartNumber){
-        Vector2 heartPosition = initialPosition.add(new Vector2(heartNumber * heartSize.x(), 0));
-        Heart heart = new Heart(heartPosition, heartSize, heartImage);
-        heartObjects[heartNumber] = heart;
-        brickerGameManager.addObject(heart, Layer.UI);
+        if(exceededMaxLives == false){
+            Vector2 heartPosition = initialPosition.add(new Vector2(heartNumber * heartSize.x(), 0));
+            Heart heart = new Heart(heartPosition, heartSize, heartImage,brickerGameManager);
+            heartObjects[heartNumber] = heart;
+            brickerGameManager.addObject(heart, Layer.UI);
+        }
     }
 }
 

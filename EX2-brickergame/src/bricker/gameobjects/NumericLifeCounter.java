@@ -25,7 +25,7 @@ public class NumericLifeCounter extends LifeCounter {
 
     @Override
     public void addLive() {
-        currentLives += 1;
+        super.addLive();
         textRenderable.setString(String.valueOf(currentLives));
         updateColor(textRenderable);
         textObject.renderer().setRenderable(textRenderable);
@@ -33,7 +33,7 @@ public class NumericLifeCounter extends LifeCounter {
 
     @Override
     public void removeLive() {
-        currentLives -= 1;
+        super.removeLive();
         textRenderable.setString(String.valueOf(currentLives));
         updateColor(textRenderable);
         textObject.renderer().setRenderable(textRenderable);

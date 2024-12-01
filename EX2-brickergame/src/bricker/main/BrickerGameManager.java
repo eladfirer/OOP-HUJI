@@ -1,8 +1,7 @@
 package bricker.main;
 
-import bricker.bricker_strageties.ExtraPaddleCollisionStrategy;
+import bricker.bricker_strageties.ExtraLiveCollisionStrategy;
 import bricker.bricker_strageties.PuckCollisionStrategy;
-import bricker.bricker_strageties.TurboModeCollisionStrategy;
 import bricker.gameobjects.*;
 import danogl.GameManager;
 import danogl.GameObject;
@@ -28,16 +27,18 @@ public class BrickerGameManager extends GameManager {
     private Counter bricksCounter = new Counter();
 
     private Ball ball;
+    private Paddle paddle;
 
     private Vector2 windowDimensions;
     private WindowController windowController;
 
-    private HeartLifeCounter heartLifeCounter;
-    private NumericLifeCounter numericLifeCounter;
+    private LifeCounter heartLifeCounter;
+    private LifeCounter numericLifeCounter;
 
     private ImageReader imageReader;
     private UserInputListener inputListener;
     private SoundReader soundReader;
+
     private int numPaddles;
     private boolean ballTurboMode;
     private int ballCollisionCounter;
@@ -108,6 +109,9 @@ public class BrickerGameManager extends GameManager {
             Paddle paddle = new Paddle(Vector2.ZERO, new Vector2(PADDLE_WIDTH, PADDLE_HEIGHT), paddleImage, inputListener, windowDimensions,maxHits,this);
             paddle.setCenter(center);
             gameObjects().addGameObject(paddle);
+            if(numPaddles == 0){
+                this.paddle = paddle;
+            }
             numPaddles++;
         }
     }
@@ -123,7 +127,7 @@ public class BrickerGameManager extends GameManager {
                 float x = WALL_THICKNESS + col * brickWidth;
                 float y = BRICK_START_Y + row * BRICK_HEIGHT;
                 Brick brick = new Brick(new Vector2(x, y), new Vector2(brickWidth - 2, BRICK_HEIGHT),
-                        brickImage, new PuckCollisionStrategy(this),this.bricksCounter);
+                        brickImage, new ExtraLiveCollisionStrategy(this),this.bricksCounter);
                 gameObjects().addGameObject(brick, Layer.STATIC_OBJECTS);
             }
         }
@@ -162,9 +166,9 @@ public class BrickerGameManager extends GameManager {
             prompt = "You win!";
         }
         if(ballHeight > windowDimensions.y()) {
-            livesRemaining--;
             heartLifeCounter.removeLive();
             numericLifeCounter.removeLive();
+            livesRemaining = numericLifeCounter.getCurrentLives();
             if (livesRemaining > 0) {
                 resetBall();
             }
@@ -238,7 +242,7 @@ public class BrickerGameManager extends GameManager {
         Renderable puckImage = imageReader.readImage(PUCK_IMAGE_PATH,true);
         Sound puckSound = soundReader.readSound(BALL_SOUND_PATH);
         for (int i = 0; i < NUM_PUCKS_CREATE_COLLISION; i++) {
-            Puck puck = new Puck(brick.getTopLeftCorner(),new Vector2(PUCK_RADIUS,PUCK_RADIUS),puckImage,puckSound,this);
+            Puck puck = new Puck(brick.getCenter(),new Vector2(PUCK_RADIUS,PUCK_RADIUS),puckImage,puckSound,this);
             addObject(puck, Layer.DEFAULT);
         }
     }
@@ -262,6 +266,24 @@ public class BrickerGameManager extends GameManager {
         ball.setVelocity(newVelocity);
         Renderable ballImage = imageReader.readImage(BALL_IMAGE_PATH, true);
         ball.renderer().setRenderable(ballImage);
+    }
+
+    public void createExtraLive(GameObject brick) {
+        Renderable heartImage = imageReader.readImage(HEART_IMAGE_PATH, true);
+        Heart heart = new Heart(brick.getCenter(),HEART_SIZE,heartImage,this);
+        heart.setVelocity(Vector2.DOWN.mult(100));
+        addObject(heart, Layer.DEFAULT);
+    }
+
+    public boolean checkIfPaddle(GameObject object) {
+        return object == paddle;
+    }
+
+    public void activateHeart(GameObject other, Heart heart) {
+        numericLifeCounter.addLive();
+        heartLifeCounter.addLive();
+        livesRemaining = numericLifeCounter.getCurrentLives();
+        destroyObject(heart, Layer.DEFAULT);
     }
 
     public static void main(String[] args) {
