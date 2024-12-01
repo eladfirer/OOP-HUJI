@@ -1,6 +1,7 @@
 package bricker.main;
 
 import bricker.bricker_strageties.BasicCollisionStrategy;
+import bricker.bricker_strageties.ExtraPaddleCollisionStrategy;
 import bricker.bricker_strageties.PuckCollisionStrategy;
 import bricker.gameobjects.*;
 import danogl.GameManager;
@@ -38,12 +39,14 @@ public class BrickerGameManager extends GameManager {
     private ImageReader imageReader;
     private UserInputListener inputListener;
     private SoundReader soundReader;
+    private int numPaddles;
 
 
     public BrickerGameManager(String windowTitle, Vector2 windowDimensions, int numRows, int numBricksInRow) {
         super(windowTitle, windowDimensions);
         this.numRows = numRows;
         this.numBricksInRow = numBricksInRow;
+        this.numPaddles = 0;
     }
 
     @Override
@@ -63,7 +66,7 @@ public class BrickerGameManager extends GameManager {
         createBall();
 
         // creating user paddle
-        createPaddle();
+        createPaddle(new Vector2(windowDimensions.x() / 2, windowDimensions.y() - 30),INFINITY_HITS_PADDLE);
 
         // create bricks
         createBricks();
@@ -96,11 +99,14 @@ public class BrickerGameManager extends GameManager {
 
     }
 
-    private void createPaddle() {
-        Renderable paddleImage = imageReader.readImage(PADDLE_IMAGE_PATH, true);
-        Paddle paddle = new Paddle(Vector2.ZERO, new Vector2(PADDLE_WIDTH, PADDLE_HEIGHT), paddleImage, inputListener, windowDimensions);
-        paddle.setCenter(new Vector2(windowDimensions.x() / 2, windowDimensions.y() - 30));
-        gameObjects().addGameObject(paddle);
+    public void createPaddle(Vector2 center, int maxHits) {
+        if(numPaddles < 2){
+            Renderable paddleImage = imageReader.readImage(PADDLE_IMAGE_PATH, true);
+            Paddle paddle = new Paddle(Vector2.ZERO, new Vector2(PADDLE_WIDTH, PADDLE_HEIGHT), paddleImage, inputListener, windowDimensions,maxHits,this);
+            paddle.setCenter(center);
+            gameObjects().addGameObject(paddle);
+            numPaddles++;
+        }
     }
 
 
@@ -114,7 +120,7 @@ public class BrickerGameManager extends GameManager {
                 float x = WALL_THICKNESS + col * brickWidth;
                 float y = BRICK_START_Y + row * BRICK_HEIGHT;
                 Brick brick = new Brick(new Vector2(x, y), new Vector2(brickWidth - 2, BRICK_HEIGHT),
-                        brickImage, new PuckCollisionStrategy(this),this.bricksCounter);
+                        brickImage, new ExtraPaddleCollisionStrategy(this),this.bricksCounter);
                 gameObjects().addGameObject(brick, Layer.STATIC_OBJECTS);
             }
         }
@@ -163,14 +169,19 @@ public class BrickerGameManager extends GameManager {
         if(prompt.isEmpty() == false){
             prompt += " Play again?";
             if(windowController.openYesNoDialog(prompt)){
-                livesRemaining = DEFAULT_LIVES;
-                bricksCounter = new Counter();
-                windowController.resetGame();
+                resetGame();
             }
             else {
                 windowController.closeWindow();
             }
         }
+    }
+
+    private void resetGame(){
+        numPaddles = 0;
+        livesRemaining = DEFAULT_LIVES;
+        bricksCounter = new Counter();
+        windowController.resetGame();
     }
 
     private void createWalls(){
@@ -205,6 +216,11 @@ public class BrickerGameManager extends GameManager {
         return gameObjects().removeGameObject(object, layer);
     }
 
+    public void destroyPaddle(Paddle paddle, int layer) {
+        numPaddles--;
+        destroyObject(paddle, layer);
+    }
+
     public void addObject(GameObject object, int layer) {
         gameObjects().addGameObject(object, layer);
     }
@@ -232,4 +248,5 @@ public class BrickerGameManager extends GameManager {
                 numBricksInRow);
         game.run();
     }
+
 }

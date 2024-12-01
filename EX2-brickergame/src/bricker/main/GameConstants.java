@@ -12,7 +12,6 @@ public final class GameConstants {
     public static final float WALL_THICKNESS = 5;
     public static final float BALL_RADIUS = 50;
     public static final float PUCK_RADIUS = BALL_RADIUS * 3/4;
-    public static final float BALL_SIZE = BALL_SPEED;
     public static final float PADDLE_HEIGHT = 15;
     public static final float PADDLE_WIDTH = 100;
     public static final float BRICK_HEIGHT = 15;
@@ -25,6 +24,8 @@ public final class GameConstants {
     public static final Vector2 HEART_INITIAL_POSITION = new Vector2(40, 460);
     public static final Vector2 NUMERIC_COUNTER_SIZE = new Vector2(50, 20);
     public static final Vector2 NUMERIC_INITIAL_POSITION = new Vector2(20, 460);
+    public static final int INFINITY_HITS_PADDLE = -1;
+    public static final int MAX_HITS_EXTRA_PADDLE = 4;
 
     public static final String BALL_IMAGE_PATH = "assets/ball.png";
     public static final String PUCK_IMAGE_PATH = "assets/mockBall.png";
