@@ -1,8 +1,8 @@
 package bricker.main;
 
-import bricker.bricker_strageties.CollisionStrategyFactory;
-import bricker.bricker_strageties.ExtraLiveCollisionStrategy;
-import bricker.bricker_strageties.PuckCollisionStrategy;
+import bricker.brick_strategies.CollisionStrategyFactory;
+import bricker.brick_strategies.ExtraLiveCollisionStrategy;
+import bricker.brick_strategies.PuckCollisionStrategy;
 import bricker.gameobjects.*;
 import danogl.GameManager;
 import danogl.GameObject;
@@ -188,12 +188,16 @@ public class BrickerGameManager extends GameManager {
         Sound collisionSound = soundReader.readSound(BALL_SOUND_PATH);
         this.ball = new Ball(Vector2.ZERO, new Vector2(BALL_RADIUS, BALL_RADIUS), ballImage,
                 collisionSound, this);
+        resetBall();
+        gameObjects().addGameObject(ball);
+    }
+
+    private void resetBall(){
         Random rand = new Random();
         float ballVelX = BALL_SPEED * (rand.nextBoolean() ? 1 : -1);
         float ballVelY = BALL_SPEED * (rand.nextBoolean() ? 1 : -1);
         ball.setVelocity(new Vector2(ballVelX, ballVelY));
         ball.setCenter(windowDimensions.mult(0.5f));
-        gameObjects().addGameObject(ball);
     }
 
 
@@ -223,8 +227,7 @@ public class BrickerGameManager extends GameManager {
             numericLifeCounter.removeLive();
             livesRemaining = numericLifeCounter.getCurrentLives();
             if (livesRemaining > 0) {
-                destroyObject(ball, Layer.DEFAULT);
-                createBall();
+                resetBall();
             }
             else {
                 prompt = "You Lose!";
@@ -313,7 +316,7 @@ public class BrickerGameManager extends GameManager {
      * @param paddle - paddle to be removed
      * @param layer  - layer of paddle
      * @see Paddle
-     * @see bricker.bricker_strageties.ExtraPaddleCollisionStrategy
+     * @see bricker.brick_strategies.ExtraPaddleCollisionStrategy
      */
     public void destroyPaddle(Paddle paddle, int layer) {
         numPaddles--;
@@ -355,7 +358,7 @@ public class BrickerGameManager extends GameManager {
      * this fucntion responsible for activating TurboModeCollisionStrategy
      *
      * @param object - object that collided with brick
-     * @see bricker.bricker_strageties.TurboModeCollisionStrategy
+     * @see bricker.brick_strategies.TurboModeCollisionStrategy
      * @see Ball
      */
     public void turboMode(GameObject object) {

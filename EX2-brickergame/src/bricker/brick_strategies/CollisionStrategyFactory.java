@@ -1,7 +1,5 @@
-package bricker.bricker_strageties;
+package bricker.brick_strategies;
 
-import bricker.bricker_strageties.*;
-import bricker.gameobjects.Brick;
 import bricker.main.BrickerGameManager;
 import danogl.util.Counter;
 

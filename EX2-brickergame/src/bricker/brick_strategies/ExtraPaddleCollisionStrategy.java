@@ -1,35 +1,30 @@
-package bricker.bricker_strageties;
+package bricker.brick_strategies;
 
-import bricker.gameobjects.Ball;
-import bricker.gameobjects.Puck;
 import bricker.main.BrickerGameManager;
 import danogl.GameObject;
-import danogl.collisions.Layer;
-import danogl.gui.Sound;
-import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
-
-import java.util.Random;
 
 import static bricker.main.GameConstants.*;
 
+
 /**
- * Extra Puck Collision Strategy for brick. has a 1/10 chance of being the brick collision strategy
+ * Extra Paddle Collision Strategy for brick. has a 1/10 chance of being the brick collision
+ * strategy
  *
  * @see CollisionStrategy
  * @see CollisionStrategyFactory
  */
-public class PuckCollisionStrategy extends CollisionStrategy {
-
+public class ExtraPaddleCollisionStrategy extends CollisionStrategy {
 
     /**
-     * Constructs a new instance of PuckCollisionStrategy.
+     * Constructs a new instance of ExtraPaddleCollisionStrategy.
      *
      * @param brickerGameManager - game manager
      */
-    public PuckCollisionStrategy(BrickerGameManager brickerGameManager) {
+    public ExtraPaddleCollisionStrategy(BrickerGameManager brickerGameManager) {
         super(brickerGameManager);
     }
+
 
     /**
      * handles collision of brick and ball/puck outcome
@@ -39,7 +34,8 @@ public class PuckCollisionStrategy extends CollisionStrategy {
      */
     @Override
     public void onCollision(GameObject object1, GameObject object2) {
-        brickerGameManager.addPuckBalls(object1);
+        brickerGameManager.createPaddle(new Vector2(WINDOW_SIZE.x() / 2, WINDOW_SIZE.y() / 2),
+                MAX_HITS_EXTRA_PADDLE);
         super.onCollision(object1, object2);
     }
 }

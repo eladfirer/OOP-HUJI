@@ -1,23 +1,22 @@
-package bricker.bricker_strageties;
+package bricker.brick_strategies;
 
 import bricker.main.BrickerGameManager;
 import danogl.GameObject;
 
-
 /**
- * Extra Live Collision Strategy for brick. has a 1/10 chance of being the brick collision strategy
+ * Basic Collision Strategy for brick. has a 1/2 chance of being the brick collision strategy
  *
  * @see CollisionStrategy
  * @see CollisionStrategyFactory
  */
-public class ExtraLiveCollisionStrategy extends CollisionStrategy {
+public class BasicCollisionStrategy extends CollisionStrategy {
 
     /**
-     * Constructs a new instance of ExtraLiveCollisionStrategy.
+     * Constructs a new instance of BasicCollisionStrategy.
      *
      * @param brickerGameManager - game manager
      */
-    public ExtraLiveCollisionStrategy(BrickerGameManager brickerGameManager) {
+    public BasicCollisionStrategy(BrickerGameManager brickerGameManager) {
         super(brickerGameManager);
     }
 
@@ -29,7 +28,8 @@ public class ExtraLiveCollisionStrategy extends CollisionStrategy {
      */
     @Override
     public void onCollision(GameObject object1, GameObject object2) {
-        brickerGameManager.createExtraLive(object1);
         super.onCollision(object1, object2);
     }
+
+
 }

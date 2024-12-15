@@ -27,8 +27,8 @@ public final class GameConstants {
     public static final String RED_BALL_IMAGE_PATH = "assets/redball.png";
     public static float ANGLE_ADJUSTMENT = 100f;
     // wall constants
-    public static final float WALL_THICKNESS = 20;
-    public static final Color WALL_COLOR = Color.WHITE;
+    public static final float WALL_THICKNESS = 30;
+    public static final Color WALL_COLOR = Color.BLUE;
 
     // paddle constants
     public static final float PADDLE_HEIGHT = 15;
@@ -50,9 +50,9 @@ public final class GameConstants {
     public static final int DEFAULT_LIVES = 3;
     public static final int MAX_LIVES = 4;
     public static final Vector2 HEART_SIZE = new Vector2(30, 30);
-    public static final Vector2 HEART_INITIAL_POSITION = new Vector2(40, 460);
+    public static final Vector2 HEART_INITIAL_POSITION = new Vector2(50, 460);
     public static final Vector2 NUMERIC_COUNTER_SIZE = new Vector2(50, 20);
-    public static final Vector2 NUMERIC_INITIAL_POSITION = new Vector2(20, 460);
+    public static final Vector2 NUMERIC_INITIAL_POSITION = new Vector2(30, 460);
     public static final String HEART_IMAGE_PATH = "assets/heart.png";
 
     // window constants

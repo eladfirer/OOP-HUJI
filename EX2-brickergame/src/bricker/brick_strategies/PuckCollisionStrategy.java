@@ -1,22 +1,23 @@
-package bricker.bricker_strageties;
+package bricker.brick_strategies;
 
 import bricker.main.BrickerGameManager;
 import danogl.GameObject;
 
 /**
- * Basic Collision Strategy for brick. has a 1/2 chance of being the brick collision strategy
+ * Puck Collision Strategy for brick. has a 1/10 chance of being the brick collision strategy
  *
  * @see CollisionStrategy
  * @see CollisionStrategyFactory
  */
-public class BasicCollisionStrategy extends CollisionStrategy {
+public class PuckCollisionStrategy extends CollisionStrategy {
+
 
     /**
-     * Constructs a new instance of BasicCollisionStrategy.
+     * Constructs a new instance of PuckCollisionStrategy.
      *
      * @param brickerGameManager - game manager
      */
-    public BasicCollisionStrategy(BrickerGameManager brickerGameManager) {
+    public PuckCollisionStrategy(BrickerGameManager brickerGameManager) {
         super(brickerGameManager);
     }
 
@@ -28,8 +29,7 @@ public class BasicCollisionStrategy extends CollisionStrategy {
      */
     @Override
     public void onCollision(GameObject object1, GameObject object2) {
+        brickerGameManager.addPuckBalls(object1);
         super.onCollision(object1, object2);
     }
-
-
 }

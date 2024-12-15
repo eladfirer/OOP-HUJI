@@ -11,6 +11,7 @@ import danogl.util.Vector2;
 import java.awt.event.KeyEvent;
 
 import static bricker.main.GameConstants.PADDLE_MOVEMENT_SPEED;
+import static bricker.main.GameConstants.WALL_THICKNESS;
 
 /**
  * Represents a paddle in the game.
@@ -71,14 +72,14 @@ public class Paddle extends GameObject {
         Vector2 topLeftCorner = getTopLeftCorner();
         float paddleWidth = getDimensions().x();
 
-        if (topLeftCorner.x() < 10) {
-            setTopLeftCorner(new Vector2(10, topLeftCorner.y()));
+        if (topLeftCorner.x() < WALL_THICKNESS) {
+            setTopLeftCorner(new Vector2(WALL_THICKNESS, topLeftCorner.y()));
             setVelocity(Vector2.ZERO);
         }
 
 
-        if (topLeftCorner.x() + paddleWidth > windowDimensions.x() - 10) {
-            setTopLeftCorner(new Vector2(windowDimensions.x() - paddleWidth - 10,
+        if (topLeftCorner.x() + paddleWidth > windowDimensions.x() - WALL_THICKNESS) {
+            setTopLeftCorner(new Vector2(windowDimensions.x() - paddleWidth - WALL_THICKNESS,
                     topLeftCorner.y()));
             setVelocity(Vector2.ZERO);
         }
