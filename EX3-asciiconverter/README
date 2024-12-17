@@ -1,0 +1,33 @@
+eladfirer_200
+212155584
+
+1. 
+
+Shell - responsible for running the program using most classes in it
+Exception classes - get thrown in case of exceptions in Shell
+AsciiArtAlgorithm - responsible for running the algorithm using Image and SubImgCharMatcher. Being called from Shell.
+KeyboardInput - singleton class responsible for getting inout from user in Shell.
+SubImgCharMatcher - responsible for matching a subiamge to its brightness value. Used by Shell.
+CharConverter - responsible for converting a char into a bright blocks and dark blocks. Bring used bySubImgCharMatcher.
+Image - this class represent an image. Being used by Shell, ImageConverter and more.
+ImageConverter - this singleton class converts an image into sub images with brightness value. Being used by Shell.
+AsciiOutput - interface for types of rendering ascii output
+ConsoleAsciiOutput - type of AsciiOutput. input is being rendered through console.
+HtmlAsciiOutput - type of AsciiOutput. input is being rendered through html.
+
+
+‪.‬2
+
+Shell - I've decided to use TreeSet in order to store current chars in use so I can print them quickly	in ascending order and also get access to each one in log(n). space complexity of the data structure is O(n) and we can't get lower than this (n chars to store).
+ SubImgCharMatcher - I've decided to use two TreeMaps. First one stores the amount of brightBlocks each char in the class has, in that way in case of adding/removing chars I can use the treeSet to compute the new norm without having to compute the bright blocks of already existing chars in class. The Second TreeSet it to store the norm of each character. in that case I don't need to recompute the norm of each char if the user docent add/remove chars between sets.
+
+‪.‬3
+I've used the exception system in order to handle user mistakes and program limitations. Run method in Shell class many functions, each function throws an exception with an informative message for why exception happened. If run catch an exception, the user gets notified. In that way I make the code cleaner and also handle the error smarter.
+
+‪.‬4
+I've included a method called setRoundingMethod in order to change the rounding method of the class. I didn't find an easier way without breaking the API to change the rounding during runtime	, because the rounding is happening inside the class.
+
+      
+
+
+ 
