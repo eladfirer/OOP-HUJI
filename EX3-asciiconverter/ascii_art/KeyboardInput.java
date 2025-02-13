@@ -14,7 +14,7 @@ class KeyboardInput
 
     public static KeyboardInput getObject()
     {
-        if(KeyboardInput.keyboardInputObject == null)
+        if(null == KeyboardInput.keyboardInputObject)
         {
             KeyboardInput.keyboardInputObject = new KeyboardInput();
         }

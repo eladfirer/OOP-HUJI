@@ -1,0 +1,45 @@
+eladfirer_200
+212155584
+
+The two Most used regexes in my program are:
+INT_VARIABLE - 
+"\\s*((final)\\s+)?int\\s+(([a-zA-Z]|_\\w)\\w*)
+(\\s*,\\s*((([a-zA-Z]|_\\w)\\w*))
+|\\s*=\\s*([+-]?\\d+|(([a-zA-Z]|_\\w)\\w*)))*
+(\\s*);\\s*"
+
+This regex is mostly been used for 
+checking variable declarations of type int.
+ Ive chopped specifically in by I could choose any
+ of the five variables (int, string, char, boolean and double)
+ as I used them a lot. Explanation of the regex structure:
+1. At the start of the regex we look for a final word and group it.
+This is optional by using ?
+2‪.‬ At the second part we check if there is an int
+3‪.‬ After it, we check if the variable name is legal.
+4‪.‬ After checking the variable name.
+ We check if there are either more variables
+ to declare (separated by comma) and if they are initialized. 
+5‪.‬ At the end, we check for an ending line sign (;)
+
+  
+METHOD_DECLARTION - \s*void\s*
+(([a-zA-Z])\w*)\s*\
+(\s*(()|((final)\s+)?(String|int|double|boolean|char)
+\s+(([a-zA-Z]|_\w)\w*)(\s*,\s*(((final)\s+)?
+(String|int|double|boolean|char)\s+(([a-zA-Z]|_\w)\w*)))*)
+\s*\)\s*\{\s* 
+(took from debug mode for full regex, so \\ is replaced with \)
+
+This regex is being used to check for method declaration
+ in the program. Explanation of the regex structure:
+1‪.‬ Checks for void at the start of the line. (Mandatory)
+2‪.‬ Check for a legal name for a function
+3‪.‬starting to check for parameters of method inside its ().
+ Could be either a method that doesn't get a parameter
+ or that gets a couple of parameters 
+(each parameter can be from a different type). 
+Also, each parameter can be a final one.
+ Parameters don't get a value in method declaration. 
+4‪.‬ Checking for a start block '{' after ()     
+  

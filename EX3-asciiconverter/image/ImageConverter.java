@@ -92,9 +92,12 @@ public class ImageConverter {
      * @return double array representing gray scale values of image
      */
     public double[][] getImageBrightness(int pixelsPerRow) {
+        // in case of same resolution & same image (program can be expanded to change images
+        // while running) as previous run, return same brightness array
         if (sameImage && image.getWidth() / pixelsPerRow == this.pixelsPerSubImage) {
             return brightnessArray;
         }
+
         this.pixelsPerSubImage = image.getWidth() / pixelsPerRow;
 
         int reScaledHeight = image.getHeight() / pixelsPerSubImage;

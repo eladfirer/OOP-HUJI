@@ -5,6 +5,7 @@ import ascii_output.HtmlAsciiOutput;
 import image.Image;
 import image.ImageConverter;
 import image_char_matching.SubImgCharMatcher;
+import image_char_matching.RoundingMethod;
 
 import java.io.IOException;
 import java.util.TreeSet;
@@ -54,13 +55,16 @@ public class Shell {
             int imgHeight = ImageConverter.closestHigherPowerOfTwo(image.getHeight());
             maxResolution = imgWidth;
             minResolution = Math.max(1, imgWidth / imgHeight);
+            char[] chars = new char[10];
             for (int i = 0; i < 10; i++) {
                 charsSet.add((char) (i + '0'));
+                chars[i] = (char) (i + '0');
             }
-            SubImgCharMatcher charsOrganizer = new SubImgCharMatcher(charsSet);
+
+            SubImgCharMatcher charsOrganizer = new SubImgCharMatcher(chars);
 
             while (true) {
-                System.out.println(">>> ");
+                System.out.print(">>> ");
                 String playerInput = KeyboardInput.readLine().trim();
                 String[] parts = playerInput.split("\\s+");
                 String firstInput = parts[0];
@@ -335,19 +339,22 @@ public class Shell {
      * @param charsOrganizer SubImgCharMatcher who matches the chars to their brightness
      * @throws RoundException throws round exception in case the user did give a valid input
      */
-    private void handleRoundCommand(String[] parts, SubImgCharMatcher charsOrganizer) throws RoundException {
-
+    private void handleRoundCommand(String[] parts, SubImgCharMatcher charsOrganizer)
+            throws RoundException {
+        if (parts.length < 2) {
+            throw new RoundException(ERROR_ROUNDING);
+        }
         String argument = parts[1];
 
         switch (argument) {
             case "up":
-                charsOrganizer.setRoundingMethod(SubImgCharMatcher.RoundingMethod.UP);
+                charsOrganizer.setRoundingMethod(RoundingMethod.UP);
                 break;
             case "down":
-                charsOrganizer.setRoundingMethod(SubImgCharMatcher.RoundingMethod.DOWN);
+                charsOrganizer.setRoundingMethod(RoundingMethod.DOWN);
                 break;
             case "abs":
-                charsOrganizer.setRoundingMethod(SubImgCharMatcher.RoundingMethod.ABS);
+                charsOrganizer.setRoundingMethod(RoundingMethod.ABS);
                 break;
             default:
                 throw new RoundException(ERROR_ROUNDING);
@@ -362,7 +369,7 @@ public class Shell {
      * @throws OutputException - exception is being throwed in case of invalid output type
      */
     private void handleOutputCommand(String[] parts) throws OutputException {
-        if (parts.length != 2) {
+        if (parts.length < 2) {
             throw new OutputException(ERROR_OUTPUT);
         }
 
@@ -404,13 +411,14 @@ public class Shell {
             consoleAsciiOutput.out(result);
         }
         else if (outputDestination.equals("html")) {
-            HtmlAsciiOutput htmlAsciiOutput = new HtmlAsciiOutput("out.html", "Courier New");
+            HtmlAsciiOutput htmlAsciiOutput = new HtmlAsciiOutput("out.html", "Times New Roman MT Std");
             htmlAsciiOutput.out(result);
         }
     }
 
     /**
      * checks if a given char is valid to get into the char system program
+     *
      * @param c - char to be examined
      * @return true in case char is valid, false otherwise
      */
@@ -418,6 +426,10 @@ public class Shell {
         return c >= 32 && c <= 126;
     }
 
+    /**
+     * main function - runs the program
+     * @param args arguments from user
+     */
     public static void main(String[] args) {
         Shell shell = new Shell();
         String imageName = args[0];
